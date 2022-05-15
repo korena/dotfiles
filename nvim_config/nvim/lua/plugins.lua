@@ -49,9 +49,9 @@ require("packer").startup({
     -- nvim-lsp configuration (it relies on cmp-nvim-lsp, so it should be loaded after cmp-nvim-lsp).
     use({ "neovim/nvim-lspconfig", after = "cmp-nvim-lsp", config = [[require('config.lsp')]] })
 
-    if vim.g.is_mac then
-      use({ "nvim-treesitter/nvim-treesitter", event = 'BufEnter', run = ":TSUpdate", config = [[require('config.treesitter')]] })
-    end
+   -- if vim.g.is_mac then
+   --   use({ "nvim-treesitter/nvim-treesitter", event = 'BufEnter', run = ":TSUpdate", config = [[require('config.treesitter')]] })
+   -- end
 
     -- Python indent (follows the PEP8 style)
     use({ "Vimjas/vim-python-pep8-indent", ft = { "python" } })
@@ -115,12 +115,13 @@ require("packer").startup({
     -- Another grep tool (similar to Sublime Text Ctrl+Shift+F)
     -- use 'dyng/ctrlsf.vim'
 
-    -- A grepping tool
+    -- A grepping toonvim-cmf,sl
     -- use {'mhinz/vim-grepper', cmd = {'Grepper', '<plug>(GrepperOperator)'}}
 
     -- A list of colorscheme plugin you may want to try. Find what suits you.
     use({"lifepillar/vim-gruvbox8", opt = true})
     use({"navarasu/onedark.nvim", opt = true})
+    use({"projekt0n/github-nvim-theme", opt = true})
     use({"sainnhe/edge", opt = true})
     use({"sainnhe/sonokai", opt = true})
     use({"sainnhe/gruvbox-material", opt = true})
@@ -144,7 +145,7 @@ require("packer").startup({
     }
 
     -- show buffers as tabs, this is a bad thing, but I'll learn to work with it
-    use({ "akinsho/bufferline.nvim", event = "VimEnter", config = [[require('config.bufferline')]] })
+    -- use({ "akinsho/bufferline.nvim", event = "VimEnter", config = [[require('config.bufferline')]] })
 
     -- fancy start screen
     use { 'goolord/alpha-nvim', event = 'VimEnter', config = [[require('config.alpha-nvim')]] }
@@ -331,8 +332,8 @@ require("packer").startup({
 
     -- nvim-lsputils (code action popups and stuff)
     -- Note: enable this when you can, it now requires nightly, it's a good one!
-    -- use({'RishabhRD/popfix'})
-    -- use({'RishabhRD/nvim-lsputils'})
+    use({'RishabhRD/popfix'})
+    use({'RishabhRD/nvim-lsputils'})
 
     use({"tpope/vim-scriptease", cmd = {"Scriptnames", "Message", "Verbose"}})
 

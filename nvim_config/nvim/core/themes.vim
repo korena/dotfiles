@@ -14,6 +14,14 @@ function! s:theme_setup_dict.onedark() dict abort
   colorscheme onedark
 endfunction
 
+function! s:theme_setup_dict.github_dark() dict abort
+  colorscheme github_dark_default
+endfunction
+
+function! s:theme_setup_dict.github_light() dict abort
+  colorscheme github_light_default
+endfunction
+
 function! s:theme_setup_dict.edge() dict abort
   let g:edge_enable_italic = 1
   let g:edge_better_performance = 1
@@ -59,6 +67,8 @@ endfunction
 let s:theme2dir = {
       \ 'gruvbox8' : 'vim-gruvbox8',
       \ 'onedark': 'onedark.nvim',
+      \ 'github_dark': 'github-nvim-theme',
+      \ 'github_light': 'github-nvim-theme',
       \ 'edge' : 'edge',
       \ 'sonokai': 'sonokai',
       \ 'gruvbox_material': 'gruvbox-material',
@@ -69,7 +79,8 @@ let s:theme2dir = {
       \ 'kanagawa': 'kanagawa.nvim',
       \ }
 
-let s:theme = utils#RandElement(keys(s:theme2dir))
+" let s:theme = utils#RandElement(keys(s:theme2dir))
+ let s:theme = 'github_dark'
 let s:colorscheme_func = printf('s:theme_setup_dict.%s()', s:theme)
 
 if !has_key(s:theme_setup_dict, s:theme)

@@ -74,31 +74,34 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 local lspconfig = require("lspconfig")
 
-lspconfig.pylsp.setup({
+--lspconfig.pylsp.setup({
+--  on_attach = custom_attach,
+--  settings = {
+--    pylsp = {
+--      plugins = {
+--        pylint = { enabled = true, executable = "pylint" },
+--        pyflakes = { enabled = false },
+--        pycodestyle = { enabled = false },
+--        jedi_completion = { fuzzy = true },
+--        pyls_isort = { enabled = true },
+--        pylsp_mypy = { enabled = true },
+--      },
+--    },
+--  },
+--  flags = {
+--    debounce_text_changes = 200,
+--  },
+--  capabilities = capabilities,
+--})
+
+
+-- python language server
+lspconfig.pyright.setup{
   on_attach = custom_attach,
-  settings = {
-    pylsp = {
-      plugins = {
-        pylint = { enabled = true, executable = "pylint" },
-        pyflakes = { enabled = false },
-        pycodestyle = { enabled = false },
-        jedi_completion = { fuzzy = true },
-        pyls_isort = { enabled = true },
-        pylsp_mypy = { enabled = true },
-      },
-    },
-  },
-  flags = {
-    debounce_text_changes = 200,
-  },
-  capabilities = capabilities,
-})
+  capabilities = capabilities
+}
 
--- lspconfig.pyright.setup{
---   on_attach = custom_attach,
---   capabilities = capabilities
--- }
-
+-- c++ language server
 lspconfig.clangd.setup({
   on_attach = custom_attach,
   capabilities = capabilities,
@@ -130,42 +133,97 @@ lspconfig.vimls.setup({
   capabilities = capabilities,
 })
 
-local sumneko_binary_path = vim.fn.exepath("lua-language-server")
-if vim.g.is_mac or vim.g.is_linux and sumneko_binary_path ~= "" then
-  local sumneko_root_path = vim.fn.fnamemodify(sumneko_binary_path, ":h:h:h")
+-- golang language server
 
-  local runtime_path = vim.split(package.path, ";")
-  table.insert(runtime_path, "lua/?.lua")
-  table.insert(runtime_path, "lua/?/init.lua")
+lspconfig.gopls.setup {
 
-  require("lspconfig").sumneko_lua.setup({
-    on_attach = custom_attach,
-    cmd = { sumneko_binary_path, "-E", sumneko_root_path .. "/main.lua" },
-    settings = {
-      Lua = {
-        runtime = {
-          -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-          version = "LuaJIT",
-          -- Setup your lua path
-          path = runtime_path,
-        },
-        diagnostics = {
-          -- Get the language server to recognize the `vim` global
-          globals = { "vim" },
-        },
-        workspace = {
-          -- Make the server aware of Neovim runtime files
-          library = api.nvim_get_runtime_file("", true),
-        },
-        -- Do not send telemetry data containing a randomized but unique identifier
-        telemetry = {
-          enable = false,
-        },
-      },
-    },
-    capabilities = capabilities,
-  })
-end
+	cmd = {'gopls'},
+-- for postfix snippets and analyzers
+	capabilities = capabilities,
+	    settings = {
+	      gopls = {
+		      experimentalPostfixCompletions = true,
+		      analyses = {
+		        unusedparams = true,
+		        shadow = true,
+		     },
+		     staticcheck = true,
+		    },
+	    },
+	on_attach = custom_attach,
+}
+
+
+
+
+  function goimports(timeoutms)
+    local context = { source = { organizeImports = true } }
+    vim.validate { context = { context, "t", true } }
+
+    local params = vim.lsp.util.make_range_params()
+    params.context = context
+
+    -- See the implementation of the textDocument/codeAction callback
+    -- (lua/vim/lsp/handler.lua) for how to do this properly.
+    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeout_ms)
+    if not result or next(result) == nil then return end
+    local actions = result[1].result
+    if not actions then return end
+    local action = actions[1]
+
+    -- textDocument/codeAction can return either Command[] or CodeAction[]. If it
+    -- is a CodeAction, it can have either an edit, a command or both. Edits
+    -- should be executed first.
+    if action.edit or type(action.command) == "table" then
+      if action.edit then
+        vim.lsp.util.apply_workspace_edit(action.edit)
+      end
+      if type(action.command) == "table" then
+        vim.lsp.buf.execute_command(action.command)
+      end
+    else
+      vim.lsp.buf.execute_command(action)
+    end
+  end
+
+  -- lua language server
+
+--local sumneko_binary_path = vim.fn.exepath("lua-language-server")
+--if vim.g.is_mac or vim.g.is_linux and sumneko_binary_path ~= "" then
+--  local sumneko_root_path = vim.fn.fnamemodify(sumneko_binary_path, ":h:h:h")
+--
+--  local runtime_path = vim.split(package.path, ";")
+--  table.insert(runtime_path, "lua/?.lua")
+--  table.insert(runtime_path, "lua/?/init.lua")
+--
+--  require("lspconfig").sumneko_lua.setup({
+--    on_attach = custom_attach,
+--    cmd = { sumneko_binary_path, "-E", sumneko_root_path .. "/main.lua" },
+--    settings = {
+--      Lua = {
+--        runtime = {
+--          -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+--          version = "LuaJIT",
+--          -- Setup your lua path
+--          path = runtime_path,
+--        },
+--        diagnostics = {
+--          -- Get the language server to recognize the `vim` global
+--          globals = { "vim" },
+--        },
+--        workspace = {
+--          -- Make the server aware of Neovim runtime files
+--          library = api.nvim_get_runtime_file("", true),
+--        },
+--        -- Do not send telemetry data containing a randomized but unique identifier
+--        telemetry = {
+--          enable = false,
+--        },
+--      },
+--    },
+--    capabilities = capabilities,
+--  })
+--end
 
 -- Change diagnostic signs.
 vim.fn.sign_define("DiagnosticSignError", { text = "✗", texthl = "DiagnosticSignError" })
@@ -179,6 +237,7 @@ vim.diagnostic.config({
   virtual_text = false,
   signs = true,
   severity_sort = true,
+  update_in_insert = false,
 })
 
 -- lsp.handlers["textDocument/publishDiagnostics"] = lsp.with(lsp.diagnostic.on_publish_diagnostics, {
