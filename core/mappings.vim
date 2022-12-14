@@ -125,8 +125,8 @@ nnoremap <silent> <leader>y :<C-U>%y<CR>
 nnoremap <silent> <leader>cl :<C-U>call utils#ToggleCursorCol()<CR>
 
 " Move current line up and down
-nnoremap <silent> <A-k> <Cmd>call utils#SwitchLine(line('.'), 'up')<CR>
-nnoremap <silent> <A-j> <Cmd>call utils#SwitchLine(line('.'), 'down')<CR>
+" nnoremap <silent> <A-k> <Cmd>call utils#SwitchLine(line('.'), 'up')<CR>
+" nnoremap <silent> <A-j> <Cmd>call utils#SwitchLine(line('.'), 'down')<CR>
 
 " Move current visual-line selection up and down
 xnoremap <silent> <A-k> :<C-U>call utils#MoveSelection('up')<CR>
