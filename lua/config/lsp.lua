@@ -44,15 +44,15 @@ local custom_attach = function(client, bufnr)
   ]])
 
   -- Set some key bindings conditional on server capabilities
-  if client.resolved_capabilities.document_formatting then
+  if client.server_capabilities.document_formatting then
     buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting_sync()<CR>", opts)
   end
-  if client.resolved_capabilities.document_range_formatting then
+  if client.server_capabilities.document_range_formatting then
     buf_set_keymap("x", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR><ESC>", opts)
   end
 
   -- The blow command will highlight the current variable and its usages in the buffer.
-  if client.resolved_capabilities.document_highlight then
+  if client.server_capabilities.document_highlight then
     vim.cmd([[
       hi! link LspReferenceRead Visual
       hi! link LspReferenceText Visual
