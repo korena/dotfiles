@@ -49,7 +49,7 @@ require("packer").startup({
     -- nvim-lsp configuration (it relies on cmp-nvim-lsp, so it should be loaded after cmp-nvim-lsp).
     use({ "neovim/nvim-lspconfig", after = "cmp-nvim-lsp", config = [[require('config.lsp')]] })
 
-    if vim.g.is_mac then
+    if vim.g.is_mac or vim.g.is_linux then
       use({ "nvim-treesitter/nvim-treesitter", event = 'BufEnter', run = ":TSUpdate", config = [[require('config.treesitter')]] })
     end
 
@@ -121,6 +121,7 @@ require("packer").startup({
     -- A list of colorscheme plugin you may want to try. Find what suits you.
     use({"lifepillar/vim-gruvbox8", opt = true})
     use({"navarasu/onedark.nvim", opt = true})
+    use({"projekt0n/github-nvim-theme", opt = true})
     use({"sainnhe/edge", opt = true})
     use({"sainnhe/sonokai", opt = true})
     use({"sainnhe/gruvbox-material", opt = true})
@@ -184,8 +185,6 @@ require("packer").startup({
     use({"SirVer/ultisnips", event = 'InsertEnter'})
     use({ "honza/vim-snippets", after = 'ultisnips'})
 
-    -- Automatic insertion and deletion of a pair of characters
-    use({"Raimondi/delimitMate", event = "InsertEnter"})
 
     -- Comment plugin
     use({"tpope/vim-commentary", event = "VimEnter"})
@@ -195,7 +194,7 @@ require("packer").startup({
 
     -- Autosave files on certain events
     use({
-      "Pocco81/AutoSave.nvim",
+      "Pocco81/auto-save.nvim",
       event = "VimEnter",
       config = function()
         vim.defer_fn(function() require('config.autosave') end, 1500)
@@ -280,8 +279,12 @@ require("packer").startup({
     use({"wellle/targets.vim", event = "VimEnter"})
 
     -- Plugin to manipulate character pairs quickly
+    -- MK: all these are just bad!
     -- use 'tpope/vim-surround'
-    use({"machakann/vim-sandwich", event = "VimEnter"})
+    -- use({"machakann/vim-sandwich", event = "VimEnter"})
+    -- Automatic insertion and deletion of a pair of characters
+    -- use({"Raimondi/delimitMate", event = "InsertEnter"})
+
 
     -- Add indent object for vim (useful for languages like Python)
     use({"michaeljsmith/vim-indent-object", event = "VimEnter"})
@@ -331,8 +334,11 @@ require("packer").startup({
 
     -- nvim-lsputils (code action popups and stuff)
     -- Note: enable this when you can, it now requires nightly, it's a good one!
-    -- use({'RishabhRD/popfix'})
-    -- use({'RishabhRD/nvim-lsputils'})
+    use({'RishabhRD/popfix'})
+    use({'RishabhRD/nvim-lsputils'})
+
+    -- Without the following, your code is bland with no colours!
+    use ({'folke/lsp-colors.nvim'})
 
     use({"tpope/vim-scriptease", cmd = {"Scriptnames", "Message", "Verbose"}})
 

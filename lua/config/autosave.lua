@@ -1,4 +1,4 @@
-require("autosave").setup({
+require("auto-save").setup({
 	enabled = true,
 	execution_message = "Autosaved at " .. vim.fn.strftime("%H:%M:%S"),
 	events = { "InsertLeave", "TextChanged" },

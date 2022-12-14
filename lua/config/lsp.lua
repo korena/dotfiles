@@ -35,6 +35,8 @@ local custom_attach = function(client, bufnr)
   buf_set_keymap("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
   buf_set_keymap("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
   buf_set_keymap("n", "<space>q", "<cmd>lua vim.diagnostic.setqflist({open = true})<CR>", opts)
+  buf_set_keymap("n", "<space>s", "<cmd>lua vim.diagnostic.show()<CR>", opts)
+  buf_set_keymap("n", "<space>h", "<cmd>lua vim.diagnostic.hide()<CR>", opts)
   buf_set_keymap("n", "<space>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
 
   vim.cmd([[
@@ -73,7 +75,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities(lsp.protocol.m
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 local lspconfig = require("lspconfig")
-local util = require("lspconfig/util")
+
 lspconfig.pylsp.setup({
   on_attach = custom_attach,
   settings = {
@@ -94,14 +96,11 @@ lspconfig.pylsp.setup({
   capabilities = capabilities,
 })
 
+ lspconfig.pyright.setup{
+   on_attach = custom_attach,
+   capabilities = capabilities
+ }
 
--- python language server
--- lspconfig.pyright.setup{
---  on_attach = custom_attach,
---  capabilities = capabilities
---}
-
--- c++ language server
 lspconfig.clangd.setup({
   on_attach = custom_attach,
   capabilities = capabilities,
@@ -117,7 +116,6 @@ lspconfig.clangd.setup({
     -- to add more checks, create .clang-tidy file in the root directory
     -- and add Checks key, see https://clang.llvm.org/extra/clang-tidy/
     "--clang-tidy",
-    "--clang-tidy-checks=*",
     "--completion-style=bundled",
     "--cross-file-rename",
     "--header-insertion=iwyu",
@@ -127,71 +125,67 @@ lspconfig.clangd.setup({
 -- set up vim-language-server
 lspconfig.vimls.setup({
   on_attach = custom_attach,
+  capabilities = capabilities,
+  filetypes = {"sh"},
   flags = {
     debounce_text_changes = 500,
   },
-  capabilities = capabilities,
-})
-
--- set up bash-language-server
-lspconfig.bashls.setup({
-  on_attach = custom_attach,
-  filetypes = { "sh" },
-  flags = {
-    debounce_text_changes = 500,
-  },
-  capabilities = capabilities,
   cmd = {
     "bash-language-server",
     "start"
   }
 })
 
+
 -- golang language server
-lspconfig.gopls.setup({
-    on_attach = custom_attach,
-    cmd = {"gopls", "serve"},
-    filetypes = {"go", "gomod"},
-    root_dir = util.root_pattern("go.work", "go.mod", ".git"),
-    settings = {
-        gopls = {
-            analyses = {
-                unusedparams = true,
-            },
-            staticcheck = true,
-        },
-    }
-})
 
-function goimports(timeoutms)
-  local context = { source = { organizeImports = true } }
-  vim.validate { context = { context, "t", true } }
+lspconfig.gopls.setup {
 
-  local params = vim.lsp.util.make_range_params()
-  params.context = context
+	cmd = {'gopls'},
+-- for postfix snippets and analyzers
+	capabilities = capabilities,
+	    settings = {
+	      gopls = {
+		      experimentalPostfixCompletions = true,
+		      analyses = {
+		        unusedparams = true,
+		        shadow = true,
+		     },
+		     staticcheck = true,
+		    },
+	    },
+	on_attach = custom_attach,
+}
 
-  -- See the implementation of the textDocument/codeAction callback
-  -- (lua/vim/lsp/handler.lua) for how to do this properly.
-  local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeout_ms)
-  if not result or next(result) == nil then return end
-  local actions = result[1].result
-  if not actions then return end
-  local action = actions[1]
+  function goimports(timeoutms)
+    local context = { source = { organizeImports = true } }
+    vim.validate { context = { context, "t", true } }
 
-  -- textDocument/codeAction can return either Command[] or CodeAction[]. If it
-  -- is a CodeAction, it can have either an edit, a command or both. Edits
-  -- should be executed first.
-  if action.edit or type(action.command) == "table" then
-    if action.edit then
-      vim.lsp.util.apply_workspace_edit(action.edit)
+    local params = vim.lsp.util.make_range_params()
+    params.context = context
+
+    -- See the implementation of the textDocument/codeAction callback
+    -- (lua/vim/lsp/handler.lua) for how to do this properly.
+    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeout_ms)
+    if not result or next(result) == nil then return end
+    local actions = result[1].result
+    if not actions then return end
+    local action = actions[1]
+
+    -- textDocument/codeAction can return either Command[] or CodeAction[]. If it
+    -- is a CodeAction, it can have either an edit, a command or both. Edits
+    -- should be executed first.
+    if action.edit or type(action.command) == "table" then
+      if action.edit then
+        vim.lsp.util.apply_workspace_edit(action.edit)
+      end
+      if type(action.command) == "table" then
+        vim.lsp.buf.execute_command(action.command)
+      end
+    else
+      vim.lsp.buf.execute_command(action)
     end
-    if type(action.command) == "table" then
-      vim.lsp.buf.execute_command(action.command)
-    end
-  else
-    vim.lsp.buf.execute_command(action)
   end
-end
 
 local sumneko_binary_path = vim.fn.exepath("lua-language-server")
 if vim.g.is_mac or vim.g.is_linux and sumneko_binary_path ~= "" then
@@ -245,12 +239,12 @@ vim.diagnostic.config({
   update_in_insert = false,
 })
 
--- lsp.handlers["textDocument/publishDiagnostics"] = lsp.with(lsp.diagnostic.on_publish_diagnostics, {
---   underline = false,
---   virtual_text = false,
---   signs = true,
---   update_in_insert = false,
--- })
+--lsp.handlers["textDocument/publishDiagnostics"] = lsp.with(lsp.diagnostic.on_publish_diagnostics, {
+--  underline = false,
+--  virtual_text = false,
+--  signs = true,
+--  update_in_insert = false,
+--})
 
 -- Change border of documentation hover window, See https://github.com/neovim/neovim/pull/13998.
 lsp.handlers["textDocument/hover"] = lsp.with(vim.lsp.handlers.hover, {
