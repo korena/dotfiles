@@ -1,0 +1,8 @@
+--require("nvim-treesitter.configs").setup({
+--  ensure_installed = {"python", "cpp", "lua", "vim"},
+--  -- ensure_installed = {"python", "cpp", "vim"},
+--
+--  highlight = {
+--    enable = false, -- false will disable the whole extension
+--  },
+--})
