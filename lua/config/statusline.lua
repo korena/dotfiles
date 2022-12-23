@@ -7,7 +7,7 @@ local function spell()
 end
 
 local function ime_state()
-  if vim.g.is_mac then
+  if vim.g.is_mac and exists('g:XkbSwitchLib') then
     -- ref: https://github.com/vim-airline/vim-airline/blob/master/autoload/airline/extensions/xkblayout.vim#L11
     local layout = vim.fn.libcall(vim.g.XkbSwitchLib, 'Xkb_Switch_getXkbLayout', '')
     if layout == '0' then

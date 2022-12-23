@@ -101,11 +101,13 @@ require("packer").startup({
     -- telescope search improved experience plugins
     -- ripgrep: (apt install ripgrep on Ubuntu)
     -- fd-find: (apt install fd-find on Ubuntu)
-
+    use {'nvim-telescope/telescope-fzf-native.nvim',
+        run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
     use {
-      'nvim-telescope/telescope.nvim', cmd = 'Telescope',
-      requires = { {'nvim-lua/plenary.nvim'} }
-    }
+       'nvim-telescope/telescope.nvim', tag = '0.1.0',
+       requires = { {'nvim-lua/plenary.nvim'} }
+}
+
     -- search emoji and other symbols
     use {'nvim-telescope/telescope-symbols.nvim', after = 'telescope.nvim'}
 
@@ -194,11 +196,13 @@ require("packer").startup({
 
     -- Autosave files on certain events
     use({
-      "Pocco81/auto-save.nvim",
-      event = "VimEnter",
-      config = function()
-        vim.defer_fn(function() require('config.autosave') end, 1500)
-      end
+	"Pocco81/auto-save.nvim",
+	config = function()
+		 require("auto-save").setup {
+			-- your config goes here
+			-- or just leave it empty :)
+		 }
+	end,
     })
 
     -- Show undo history visually
@@ -219,11 +223,11 @@ require("packer").startup({
     -- Plug 'junegunn/vim-peekaboo'
     use({ "jdhao/better-escape.vim", event = { "InsertEnter" } })
 
-    if vim.g.is_mac then
-      use({ "lyokha/vim-xkbswitch", event = { "InsertEnter" } })
-    elseif vim.g.is_win then
-      use({ "Neur1n/neuims", event = { "InsertEnter" } })
-    end
+ --   if vim.g.is_mac then
+ --     use({ "lyokha/vim-xkbswitch", event = { "InsertEnter" } })
+ --   elseif vim.g.is_win then
+ --     use({ "Neur1n/neuims", event = { "InsertEnter" } })
+ --   end
 
     -- Syntax check and make
     -- use 'neomake/neomake'
