@@ -23,4 +23,4 @@ index the linux kernel without requiring 4GB of memory (and crashing even after 
 - Resolve all the issues that come up when you `$ vim ~/.config/nvim/init.vim` (just an example of
   openning a file in neovim)
 - Run `PackerSync` and resolve any issues for failed packages, and document them here!
-
+- Run `:UpdateRemotePlugins` for wilder issues that you don't understand.
