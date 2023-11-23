@@ -18,3 +18,9 @@ endfor
 " Disable annoying auto brackets thing
 let g:AutoPairs = {}
 
+" I added everything below for LaTeX
+syntax enable
+let maplocalleader = ","
+" The following should make latex highlighting possible
+" within none .tex source files
+let g:tex_flavor = "latex"

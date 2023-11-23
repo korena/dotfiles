@@ -15,7 +15,7 @@ function! s:theme_setup_dict.onedark() dict abort
 endfunction
 
 function! s:theme_setup_dict.github_dark() dict abort
-  colorscheme github_dark_default
+  colorscheme github_dark_high_contrast
 endfunction
 
 function! s:theme_setup_dict.github_light() dict abort
@@ -80,7 +80,7 @@ let s:theme2dir = {
       \ }
 
 " let s:theme = utils#RandElement(keys(s:theme2dir))
- let s:theme = 'github_dark'
+ let s:theme = 'onedark'
 let s:colorscheme_func = printf('s:theme_setup_dict.%s()', s:theme)
 
 if !has_key(s:theme_setup_dict, s:theme)

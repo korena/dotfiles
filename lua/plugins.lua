@@ -134,9 +134,9 @@ require("packer").startup({
     use({"rebelot/kanagawa.nvim", opt = true})
 
     -- Show git change (change, delete, add) signs in vim sign column
-    use({"mhinz/vim-signify", event = 'BufEnter'})
+    -- use({"mhinz/vim-signify", event = 'BufEnter'})
     -- Another similar plugin
-    -- use 'airblade/vim-gitgutter'
+    use 'airblade/vim-gitgutter'
 
     use {'kyazdani42/nvim-web-devicons', event = 'VimEnter'}
 

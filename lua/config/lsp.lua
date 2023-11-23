@@ -76,25 +76,25 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 local lspconfig = require("lspconfig")
 
-lspconfig.pylsp.setup({
-  on_attach = custom_attach,
-  settings = {
-    pylsp = {
-      plugins = {
-        pylint = { enabled = true, executable = "pylint" },
-        pyflakes = { enabled = false },
-        pycodestyle = { enabled = false },
-        jedi_completion = { fuzzy = true },
-        pyls_isort = { enabled = true },
-        pylsp_mypy = { enabled = true },
-      },
-    },
-  },
-  flags = {
-    debounce_text_changes = 200,
-  },
-  capabilities = capabilities,
-})
+-- lspconfig.pylsp.setup({
+--   on_attach = custom_attach,
+--   settings = {
+--     pylsp = {
+--       plugins = {
+--         pylint = { enabled = true, executable = "pylint" },
+--         pyflakes = { enabled = false },
+--         pycodestyle = { enabled = false },
+--         jedi_completion = { fuzzy = true },
+--         pyls_isort = { enabled = true },
+--         pylsp_mypy = { enabled = true },
+--       },
+--     },
+--   },
+--   flags = {
+--     debounce_text_changes = 200,
+--   },
+--   capabilities = capabilities,
+-- })
 
  lspconfig.pyright.setup{
    on_attach = custom_attach,
@@ -136,6 +136,21 @@ lspconfig.vimls.setup({
   }
 })
 
+-- Register sphinx language server (esbonio) with lspconfig
+
+lspconfig.esbonio.setup {
+	cmd = {'esbonio'},
+	capabilities = capabilities,
+    on_attach = custom_attach,
+	  init_options = {
+    server = {
+      logLevel = "debug"
+    },
+--    sphinx = {
+--      srcDir = "${confDir}/../docs-src"
+--   }
+}
+}
 
 -- golang language server
 
@@ -189,15 +204,13 @@ lspconfig.gopls.setup {
 
 local sumneko_binary_path = vim.fn.exepath("lua-language-server")
 if vim.g.is_mac or vim.g.is_linux and sumneko_binary_path ~= "" then
-  local sumneko_root_path = vim.fn.fnamemodify(sumneko_binary_path, ":h:h:h")
 
   local runtime_path = vim.split(package.path, ";")
   table.insert(runtime_path, "lua/?.lua")
   table.insert(runtime_path, "lua/?/init.lua")
 
-  require("lspconfig").sumneko_lua.setup({
+  require("lspconfig").lua_ls.setup({
     on_attach = custom_attach,
-    cmd = { sumneko_binary_path, "-E", sumneko_root_path .. "/main.lua" },
     settings = {
       Lua = {
         runtime = {
