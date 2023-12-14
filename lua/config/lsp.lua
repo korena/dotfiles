@@ -21,6 +21,7 @@ local custom_attach = function(client, bufnr)
 
   -- Mappings.
   local opts = { noremap = true, silent = true }
+  buf_set_keymap("n", "ft", "<Cmd>lua vim.lsp.buf.format()<CR>", opts)
   buf_set_keymap("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
   buf_set_keymap("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
   buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
