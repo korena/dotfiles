@@ -189,11 +189,11 @@ let g:XkbSwitchEnabled = 0
 let g:neoformat_enabled_python = ['black', 'yapf']
 let g:neoformat_cpp_clangformat = {
       \ 'exe': 'clang-format',
-      \ 'args': ['--style="{IndentWidth: 4}"']
+      \ 'args': ['--style=file']
       \ }
 let g:neoformat_c_clangformat = {
       \ 'exe': 'clang-format',
-      \ 'args': ['--style="{IndentWidth: 4}"']
+      \ 'args': ['--style=file']
       \ }
 
 let g:neoformat_enabled_cpp = ['clangformat']
@@ -408,6 +408,7 @@ if exists('g:started_by_firenvim') && g:started_by_firenvim
     autocmd BufEnter *.txt setlocal filetype=markdown laststatus=0 nonumber noshowcmd noruler showtabline=1
   augroup END
 endif
+
 
 """"""""""""""""""""""""""""""nvim-gdb settings""""""""""""""""""""""""""""""
 " nnoremap <leader>dp :<C-U>GdbStartPDB python -m pdb %<CR>

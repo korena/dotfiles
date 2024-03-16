@@ -15,9 +15,12 @@ function M.show_line_diagnostics()
 end
 
 local custom_attach = function(client, bufnr)
-  local function buf_set_keymap(...)
-    api.nvim_buf_set_keymap(bufnr, ...)
-  end
+    if client.config.flags then
+        client.config.flags.allow_incremental_sync = true
+    end
+    local function buf_set_keymap(...)
+        api.nvim_buf_set_keymap(bufnr, ...)
+    end
 
   -- Mappings.
   local opts = { noremap = true, silent = true }

@@ -104,7 +104,7 @@ require("packer").startup({
     use {'nvim-telescope/telescope-fzf-native.nvim',
         run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
     use {
-       'nvim-telescope/telescope.nvim', tag = '0.1.0',
+       'nvim-telescope/telescope.nvim', tag = '0.1.4',
        requires = { {'nvim-lua/plenary.nvim'} }
 }
 
@@ -134,9 +134,9 @@ require("packer").startup({
     use({"rebelot/kanagawa.nvim", opt = true})
 
     -- Show git change (change, delete, add) signs in vim sign column
-    -- use({"mhinz/vim-signify", event = 'BufEnter'})
+    use({"mhinz/vim-signify", event = 'BufEnter'})
     -- Another similar plugin
-    use 'airblade/vim-gitgutter'
+    -- use 'airblade/vim-gitgutter'
 
     use {'kyazdani42/nvim-web-devicons', event = 'VimEnter'}
 
@@ -152,11 +152,11 @@ require("packer").startup({
     -- fancy start screen
     use { 'goolord/alpha-nvim', event = 'VimEnter', config = [[require('config.alpha-nvim')]] }
 
-    use({
-      "lukas-reineke/indent-blankline.nvim",
-      event = 'VimEnter',
-      config = [[require('config.indent-blankline')]]
-    })
+    --    use({
+    --      "lukas-reineke/indent-blankline.nvim",
+    --      event = 'VimEnter',
+    --      config = [[require('config.indent-blankline')]]
+    --    })
 
     -- Highlight URLs inside vim
     use({"itchyny/vim-highlighturl", event = "VimEnter"})
@@ -233,8 +233,11 @@ require("packer").startup({
     -- use 'neomake/neomake'
 
     -- Auto format tools
-    use({ "sbdchd/neoformat", cmd = { "Neoformat" } })
+    -- use({ "sbdchd/neoformat", cmd = { "Neoformat" } })
     -- use 'Chiel92/vim-autoformat'
+
+    use({"nvimdev/guard.nvim", requires = "nvimdev/guard-collection", setup  })
+
 
     -- Git command inside vim
     use({ "tpope/vim-fugitive", event = "User InGitRepo" })
@@ -338,8 +341,8 @@ require("packer").startup({
 
     -- nvim-lsputils (code action popups and stuff)
     -- Note: enable this when you can, it now requires nightly, it's a good one!
-    use({'RishabhRD/popfix'})
-    use({'RishabhRD/nvim-lsputils'})
+   -- use({'RishabhRD/popfix'})
+   -- use({'RishabhRD/nvim-lsputils'})
 
     -- Without the following, your code is bland with no colours!
     use ({'folke/lsp-colors.nvim'})
@@ -367,6 +370,9 @@ require("packer").startup({
     if vim.g.is_win or vim.g.is_linux then
       use({ "sakhnik/nvim-gdb", run = { "bash install.sh" }, opt = true, setup = [[vim.cmd('packadd nvim-gdb')]] })
     end
+
+    -- codeium AI
+    use {'Exafunction/codeium.vim', tag = '1.8.10'}
 
     -- Session management plugin
     use({"tpope/vim-obsession", cmd = 'Obsession'})

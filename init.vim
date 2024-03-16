@@ -18,9 +18,15 @@ endfor
 " Disable annoying auto brackets thing
 let g:AutoPairs = {}
 
+" disable popup transparency
+highlight Pmenu ctermbg=Grey
+highlight PmenuSel ctermbg=Grey
+highlight Normal ctermbg=Grey
+highlight NonText ctermbg=Grey
 " I added everything below for LaTeX
 syntax enable
 let maplocalleader = ","
 " The following should make latex highlighting possible
 " within none .tex source files
 let g:tex_flavor = "latex"
+

@@ -40,7 +40,7 @@ let g:mapleader = ','
 let g:vimsyn_embed = 'l'
 
 " Use English as main language
-language en_US.utf-8
+" language en_US.utf-8
 "}}
 
 "{{ Disable loading certain plugins
@@ -52,6 +52,13 @@ let g:netrw_liststyle = 3
 if g:is_win
   let g:netrw_http_cmd = 'curl --ssl-no-revoke -Lo'
 endif
+
+" Codeium AI setup
+let g:codeium_server_config = {
+  \'portal_url': 'https://codeium.com',
+  \'api_url': 'https://codeium.com/_route/api_server' }
+let g:codeium_no_map_tab = v:true
+imap <script><silent><nowait><expr> <C-Space> codeium#Accept()
 
 " Do not load tohtml.vim
 let g:loaded_2html_plugin = 1
