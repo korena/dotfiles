@@ -9,6 +9,8 @@ return {
 					package_uninstalled = "✗",
 				},
 			},
+      -- clangd installed on host
+      ensure_installed = { "codelldb", "cpptools" },
 		},
 	},
 	{

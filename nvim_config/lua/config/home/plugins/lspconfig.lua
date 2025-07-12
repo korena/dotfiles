@@ -7,6 +7,27 @@ return {
 		"mason-org/mason.nvim",
 		"b0o/schemastore.nvim",
 	},
+  servers = {
+  rust_analyzer = {
+			settings = {
+				["rust-analyzer"] = {
+					imports = {
+						granularity = {
+							group = "module",
+						},
+						prefix = "self",
+					},
+					cargo = {
+						allFeatures = true,
+						buildScripts = { enable = true },
+					},
+					procMacro = {
+						enable = true,
+					},
+				},
+			},
+    }
+  },
 	config = function()
 		local has_lspconfig, lspconfig = pcall(require, "lspconfig")
 		if not has_lspconfig then
@@ -75,13 +96,14 @@ return {
 			end,
 		})
 
-    vim.g.mapleader = ","
+		vim.g.mapleader = ","
 		-- used to enable autocompletion (assign to every lsp server config)
 		local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 		-- enable snippet
 		capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 		-- enable inlay hint
+
 		vim.lsp.inlay_hint.enable(true, { 0 })
 
 		-- change diagnostic symbols in the sign column (gutter)
@@ -136,6 +158,7 @@ return {
 				},
 			},
 		})
+
 
 		-- clangd managed outside of mason
 		lspconfig.clangd.setup({

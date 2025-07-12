@@ -13,7 +13,7 @@ return { "akinsho/bufferline.nvim", version = "*",
         style = 'icon',
         icon = "▎"
     },
-    buffer_close_icon = "",
+    buffer_close_icon = "✘",
     modified_icon = "●",
     close_icon = "x",
     left_trunc_marker = "",

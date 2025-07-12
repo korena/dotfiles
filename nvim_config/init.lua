@@ -67,6 +67,26 @@ end
 setup_clipboard()
 
 
+-- Quick Scratch buffer
+-- Initialize a counter for scratch buffers
+local scratch_count = 0
+
+-- Define the user command
+vim.api.nvim_create_user_command("Scratch", function ()
+  scratch_count = scratch_count + 1
+  local buf_name = "Scratch " .. scratch_count
+
+  -- create a new split window and buffer
+  vim.cmd("split")
+  local buf = vim.api.nvim_create_buf(false, true) -- unlisted, scrach buffer
+  vim.api.nvim_win_set_buf(0, buf)
+
+  -- set buffer name and filetype
+  vim.api.nvim_buf_set_name(buf, buf_name)
+  vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
+end, {})
+
+
 -- print to a new buffer .. I use this for debugging, so I can print stuff and actually see them
 function Show_debug_in_scratch(lines)
   vim.cmd("new") -- open new split
