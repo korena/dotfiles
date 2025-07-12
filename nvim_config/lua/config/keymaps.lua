@@ -1,6 +1,5 @@
 vim.g.mapleader = ','
 vim.g.loaded_matchit = 1
-vim.g.loaded_matchparen = 1
 
 local function map(mode, lhs, rhs)
 	vim.keymap.set(mode, lhs, rhs, { silent = true })
