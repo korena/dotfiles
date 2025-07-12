@@ -119,6 +119,16 @@ vim.api.nvim_create_autocmd('BufReadPost', {
   end,
 })
 
+-- for the diagnostics float to standout
+vim.cmd([[
+  highlight DiagnosticFloat guibg=#2a2a37 guifg=#e0e0e0
+  highlight DiagnosticBorder guifg=#5e81ac
+  highlight DiagnosticError guifg=#bf616a
+  highlight DiagnosticWarn guifg=#ebcb8b
+  highlight DiagnosticInfo guifg=#81a1c1
+  highlight DiagnosticHint guifg=#a3be8c
+]])
+
 -- The path here means ./config/home/settings
 require("config.home.settings")
 require("config.keymaps")

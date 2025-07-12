@@ -7,8 +7,8 @@ return {
 		"mason-org/mason.nvim",
 		"b0o/schemastore.nvim",
 	},
-  servers = {
-  rust_analyzer = {
+	servers = {
+		rust_analyzer = {
 			settings = {
 				["rust-analyzer"] = {
 					imports = {
@@ -26,8 +26,8 @@ return {
 					},
 				},
 			},
-    }
-  },
+		},
+	},
 	config = function()
 		local has_lspconfig, lspconfig = pcall(require, "lspconfig")
 		if not has_lspconfig then
@@ -124,8 +124,26 @@ return {
 			-- 1. disable prefix (e.g. number)
 			-- 2. sort from the highest severity
 			-- 3. include the source where the warn/error come from
-			float = { prefix = "", header = "", severity_sort = true, source = true },
+			float = {
+				boarder = "rounded",
+				style = "minimal",
+				prefix = "",
+				header = "",
+				severity_sort = true,
+				source = true,
+			},
 		})
+
+		-- style the floating diagnostics appearance
+		local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+		function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+			opts = opts or {}
+			opts.border = opts.border or "rounded"
+			opts.max_width = opts.max_width or 80
+			opts.max_height = opts.max_height or 20
+			opts.winhighlight = "NormalFloat:DiagnosticFloat,FloatBorder:DiagnosticBorder"
+			return orig_util_open_floating_preview(contents, syntax, opts, ...)
+		end
 
 		-- lsp server config
 
@@ -158,7 +176,6 @@ return {
 				},
 			},
 		})
-
 
 		-- clangd managed outside of mason
 		lspconfig.clangd.setup({
