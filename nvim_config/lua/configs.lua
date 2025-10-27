@@ -57,6 +57,9 @@ o.foldmethod = "indent"
 o.foldenable = false
 o.foldlevel = 99
 
+-- handle leading whitespaces and tabs
+vim.o.list = true
+vim.o.listchars = 'tab:» ,lead:•,trail:•'
 
 -- Set up backup directory
 local backupdir = vim.fn.expand(vim.fn.stdpath('data') .. '/backup//')
