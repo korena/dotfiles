@@ -7,3 +7,5 @@ require('configs')
 require('autocmds')
 require('usrcmds')
 require('keymaps')
+
+vim.cmd("colorscheme nightfox")

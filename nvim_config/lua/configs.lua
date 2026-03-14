@@ -1,7 +1,6 @@
 local o = vim.opt
 
 -- Editor options
-
 o.number = true -- Print the line number in front of each line
 o.relativenumber = true -- Show the line number relative to the line with the cursor in front of each line.
 o.scrolloff=3

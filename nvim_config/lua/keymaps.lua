@@ -1,12 +1,48 @@
 -- Toggle diagnostic
 vim.keymap.set('n', '<leader>td', "<cmd>ToggleDiagnostics<CR>", {silent = true, desc = 'Toggle diagnostics line'})
-vim.g.loaded_matchit = 1
-vim.g.loaded_matchparen = 1
 
-local function map(mode, lhs, rhs)
-	vim.keymap.set(mode, lhs, rhs, { silent = true })
+
+local function map(mode, l, r, opts)
+  opts = opts or { silent = true }
+  opts.buffer = bufnr
+  vim.keymap.set(mode, l, r, opts)
 end
 
+-- gitsign keys
+local gitsigns = require('gitsigns')
+    -- Navigation
+map('n', ']c', function() if vim.wo.diff then vim.cmd.normal({']c', bang = true}) else gitsigns.nav_hunk('next') end end, { desc = " Next hunk", silent = true })
+map('n', '[c', function() if vim.wo.diff then vim.cmd.normal({'[c', bang = true}) else gitsigns.nav_hunk('prev') end end, { desc = " Prev hunk", silent = true })
+map({ "n" }, "<leader>hs", gitsigns.stage_hunk, { desc = "Stage hunk", silent = true })
+map({ "n" }, "<leader>hr", gitsigns.reset_hunk, { desc = "reset hunk", silent = true })
+map({ "v" }, "<leader>hs", function() gitsigns.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end, { desc = " Stage hunk", silent = true })
+map({ "v" }, "<leader>hr", function() gitsigns.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end, { desc = " reset hunk", silent = true })
+map({ "n" }, "<leader>hS", gitsigns.stage_buffer, { desc = "Stage Buffer", silent = true })
+map({ "n" }, "<leader>hR", gitsigns.reset_buffer, { desc = "Reset Buffer", silent = true })
+map({ "n" }, "<leader>hp", gitsigns.preview_hunk, { desc = "Preview hunk", silent = true })
+map({ "n" }, "<leader>hi", gitsigns.preview_hunk_inline, { desc = "Preview hunk inline" })
+map({ "n" }, "<leader>hb", function() gitsigns.blame_line({ full = true }) end, { desc = "Blame line", silent = true })
+map({ "n" }, "<leader>hd", gitsigns.diffthis, { desc = "Diff this", silent = true })
+map({ "n" }, "<leader>hD", function() gitsigns.diffthis('~') end, { desc = "Diff this (?)", silent = true })
+map({ "n" }, "<leader>hQ", function() gitsigns.setqflist('all') end, { desc = "Set qflist (?)", silent = true })
+map({ "n" }, "<leader>hq", gitsigns.setqflist, { desc = "Set qflist (?)", silent = true })
+    -- Toggles
+map({ "n" }, "<leader>tB", gitsigns.toggle_current_line_blame, { desc = "Toggle current line blame", silent = true })
+map({ "n" }, "<leader>tw", gitsigns.toggle_word_diff, { desc = "Toggle word diff", silent = true })
+    -- Text object
+map({'o', 'x'}, "<leader>ih", gitsigns.select_hunk, { desc = "select hunk", silent = true })
+
+
+-- AI assistant
+vim.keymap.set({ "n", "x" }, "<leader>q", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask opencode…" })
+vim.keymap.set({ "n", "x" }, "<leader>qa", function() require("opencode").select() end, { desc = "Execute opencode action…" })
+vim.keymap.set({ "n", "t" }, "<leader>ta", function() require("opencode").toggle() end, { desc = "Toggle opencode" })
+
+vim.keymap.set({ "n", "x" }, "<leader>qr",  function() return require("opencode").operator("@this ") end, { desc = "Add range to opencode", expr = true })
+vim.keymap.set("n",          "<leader>ql", function() return require("opencode").operator("@this ") .. "_" end, { desc = "Add line to opencode", expr = true })
+
+vim.keymap.set("n", "<S-C-u>", function() require("opencode").command("session.half.page.up") end,   { desc = "Scroll opencode up" })
+vim.keymap.set("n", "<S-C-d>", function() require("opencode").command("session.half.page.down") end, { desc = "Scroll opencode down" })
 -- nvim tree
 vim.g.nvim_tree_quit_on_open = 1
 vim.g.nvim_tree_highlight_opened_files = 1
